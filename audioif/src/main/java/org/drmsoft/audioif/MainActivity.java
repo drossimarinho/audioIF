@@ -1,8 +1,6 @@
-package com.example.myapplication;
+package org.drmsoft.audioif;
 
-import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.speech.RecognizerIntent;
 import android.speech.tts.TextToSpeech;
@@ -19,7 +17,6 @@ import org.zmpp.blorb.NativeImageFactory;
 import org.zmpp.iff.FormChunk;
 import org.zmpp.iff.WritableFormChunk;
 import org.zmpp.io.IOSystem;
-import org.zmpp.vm.InvalidStoryException;
 import org.zmpp.vm.MachineFactory;
 import org.zmpp.vm.SaveGameDataStore;
 import org.zmpp.windowing.AnnotatedText;
@@ -27,7 +24,6 @@ import org.zmpp.windowing.BufferedScreenModel;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;

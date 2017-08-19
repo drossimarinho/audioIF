@@ -1,4 +1,4 @@
-package com.example.myapplication;
+package org.drmsoft.audioif;
 
 import org.zmpp.vm.InvalidStoryException;
 

@@ -1,4 +1,4 @@
-package com.example.myapplication;
+package org.drmsoft.audioif;
 
 public enum StoryFileType {
     ZFILE,

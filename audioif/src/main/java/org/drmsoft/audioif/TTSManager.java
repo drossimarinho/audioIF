@@ -1,13 +1,11 @@
-package com.example.myapplication;
+package org.drmsoft.audioif;
 
 import android.os.Build;
 import android.speech.tts.TextToSpeech;
 
 import java.util.Locale;
 import android.content.Context;
-import android.speech.tts.TextToSpeech;
 import android.util.Log;
-import java.util.Locale;
 
 /**
  * Created by Nilanchala

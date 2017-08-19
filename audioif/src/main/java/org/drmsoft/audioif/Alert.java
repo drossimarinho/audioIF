@@ -1,4 +1,4 @@
-package com.example.myapplication;
+package org.drmsoft.audioif;
 
 import android.app.Activity;
 import android.app.AlertDialog;
