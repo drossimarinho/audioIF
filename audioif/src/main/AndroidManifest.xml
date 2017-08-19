@@ -17,9 +17,11 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".controllers.MainActivity">
+        <activity android:name=".controllers.MainActivity"
+                  android:configChanges="orientation|keyboard|keyboardHidden|screenSize">
         </activity>
-        <activity android:name=".controllers.TextModeActivity">
+        <activity android:name=".controllers.TextModeActivity"
+                  android:configChanges="orientation|keyboard|keyboardHidden|screenSize">
         </activity>
     </application>
 

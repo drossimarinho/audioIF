@@ -4,12 +4,16 @@ import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.speech.RecognizerIntent;
 import android.speech.tts.TextToSpeech;
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Layout;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import org.drmsoft.audioif.R;
@@ -51,6 +55,8 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
     private FileChooser fileChooser;
     private StoryFileTypeChecker storyFileTypeChecker;
     private org.drmsoft.audioif.helpers.Alert Alert;
+    private ScrollView scrollView;
+    private ConstraintLayout scrollArea;
 
     private void startVoiceInput() {
         Runnable r = new Runnable() {
@@ -112,9 +118,11 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
         storyField = (TextView) findViewById(R.id.textView);
         commandField = (EditText) findViewById(R.id.editText);
         button = (Button) findViewById(R.id.button);
+        scrollView = (ScrollView) findViewById(R.id.scrollView);
+        scrollArea = (ConstraintLayout) findViewById(R.id.scrollArea);
         tts = new TextToSpeech(this, this);
         storyFileTypeChecker = new StoryFileTypeChecker();
-
+        Log.e("","");
     }
 
     public void executeEngine(){
@@ -133,6 +141,17 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
                 @Override
                 public void onClick(View view) {
                     startVoiceInput();
+                }
+            });
+            scrollArea.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if(tts.isSpeaking()){
+                        tts.stop();
+                    }
+                    else{
+                        handleButtonClick();
+                    }
                 }
             });
             String initialText = getBufferText(screenModel);

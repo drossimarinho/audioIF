@@ -9,6 +9,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ScrollView;
@@ -58,6 +60,8 @@ public class TextModeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         Alert = new Alert(this);
         super.onCreate(savedInstanceState);
+        getSupportActionBar().hide();
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_text_mode);
         storyField = (TextView) findViewById(R.id.textView);
         storyField.setText("");
