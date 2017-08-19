@@ -1,4 +1,4 @@
-package org.drmsoft.audioif;
+package org.drmsoft.audioif.helpers;
 
 import android.os.Build;
 import android.speech.tts.TextToSpeech;

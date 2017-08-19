@@ -1,4 +1,4 @@
-package org.drmsoft.audioif;
+package org.drmsoft.audioif.controllers;
 
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
@@ -12,6 +12,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import org.drmsoft.audioif.R;
+import org.drmsoft.audioif.helpers.Alert;
+import org.drmsoft.audioif.helpers.FileChooser;
+import org.drmsoft.audioif.helpers.StoryFileTypeChecker;
+import org.drmsoft.audioif.models.StoryFileType;
 import org.zmpp.ExecutionControl;
 import org.zmpp.blorb.NativeImage;
 import org.zmpp.blorb.NativeImageFactory;
@@ -45,7 +50,7 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
     private InputStream storyIs;
     private FileChooser fileChooser;
     private StoryFileTypeChecker storyFileTypeChecker;
-    private Alert Alert;
+    private org.drmsoft.audioif.helpers.Alert Alert;
 
     private void startVoiceInput() {
         Runnable r = new Runnable() {
@@ -105,7 +110,7 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         storyField = (TextView) findViewById(R.id.textView);
-        commandField = (EditText) findViewById(R.id.editText2);
+        commandField = (EditText) findViewById(R.id.editText);
         button = (Button) findViewById(R.id.button);
         tts = new TextToSpeech(this, this);
         storyFileTypeChecker = new StoryFileTypeChecker();

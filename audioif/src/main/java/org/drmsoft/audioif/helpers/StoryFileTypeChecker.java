@@ -1,5 +1,6 @@
-package org.drmsoft.audioif;
+package org.drmsoft.audioif.helpers;
 
+import org.drmsoft.audioif.models.StoryFileType;
 import org.zmpp.vm.InvalidStoryException;
 
 /**

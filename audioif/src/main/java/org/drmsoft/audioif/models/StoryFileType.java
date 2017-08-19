@@ -1,4 +1,4 @@
-package org.drmsoft.audioif;
+package org.drmsoft.audioif.models;
 
 public enum StoryFileType {
     ZFILE,
