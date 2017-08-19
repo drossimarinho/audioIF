@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import org.zmpp.ExecutionControl;
 import org.zmpp.blorb.NativeImage;
@@ -36,7 +37,7 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
     private ExecutionControl executionControl;
     private MachineFactory.MachineInitStruct machineInit;
     private BufferedScreenModel screenModel;
-    private EditText storyField;
+    private TextView storyField;
     private EditText commandField;
     private Button button;
     private static final int REQ_CODE_SPEECH_INPUT = 100;
@@ -103,7 +104,7 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
         Alert = new Alert(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        storyField = (EditText) findViewById(R.id.editText);
+        storyField = (TextView) findViewById(R.id.textView);
         commandField = (EditText) findViewById(R.id.editText2);
         button = (Button) findViewById(R.id.button);
         tts = new TextToSpeech(this, this);
@@ -244,7 +245,7 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
             result += text.getText();
         }
         if(result.length() > 2){
-            return result.substring(0,result.length()-2);
+            return result.substring(0,result.length()-2).trim();
         }
         return result;
     }
