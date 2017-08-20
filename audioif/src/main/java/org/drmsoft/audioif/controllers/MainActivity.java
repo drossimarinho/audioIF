@@ -55,8 +55,6 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
     private FileChooser fileChooser;
     private StoryFileTypeChecker storyFileTypeChecker;
     private org.drmsoft.audioif.helpers.Alert Alert;
-    private ScrollView scrollView;
-    private ConstraintLayout scrollArea;
 
     private void startVoiceInput() {
         Runnable r = new Runnable() {
@@ -118,11 +116,8 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
         storyField = (TextView) findViewById(R.id.textView);
         commandField = (EditText) findViewById(R.id.editText);
         button = (Button) findViewById(R.id.button);
-        scrollView = (ScrollView) findViewById(R.id.scrollView);
-        scrollArea = (ConstraintLayout) findViewById(R.id.scrollArea);
         tts = new TextToSpeech(this, this);
         storyFileTypeChecker = new StoryFileTypeChecker();
-        Log.e("","");
     }
 
     public void executeEngine(){
@@ -143,14 +138,14 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
                     startVoiceInput();
                 }
             });
-            scrollArea.setOnClickListener(new View.OnClickListener() {
+            storyField.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     if(tts.isSpeaking()){
                         tts.stop();
                     }
                     else{
-                        handleButtonClick();
+                        startVoiceInput();
                     }
                 }
             });
