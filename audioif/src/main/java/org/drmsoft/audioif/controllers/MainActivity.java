@@ -4,21 +4,18 @@ import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.speech.RecognizerIntent;
 import android.speech.tts.TextToSpeech;
-import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.Layout;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
 import org.drmsoft.audioif.R;
 import org.drmsoft.audioif.helpers.Alert;
 import org.drmsoft.audioif.helpers.FileChooser;
+import org.drmsoft.audioif.helpers.FileScanner;
 import org.drmsoft.audioif.helpers.StoryFileTypeChecker;
 import org.drmsoft.audioif.models.StoryFileType;
 import org.zmpp.ExecutionControl;
@@ -52,7 +49,7 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
     private static final int REQ_CODE_SPEECH_INPUT = 100;
     private TextToSpeech tts;
     private InputStream storyIs;
-    private FileChooser fileChooser;
+    private FileScanner fileScanner;
     private StoryFileTypeChecker storyFileTypeChecker;
     private org.drmsoft.audioif.helpers.Alert Alert;
 
@@ -187,8 +184,8 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
                 Log.e("TTS", "This Language is not supported");
             } else {
                 //Call speak stuff
-                fileChooser = new FileChooser(this);
-                fileChooser.setFileListener(new FileChooser.FileSelectedListener() {
+                fileScanner = new FileScanner(this);
+                fileScanner.setFileListener(new FileScanner.FileSelectedListener() {
                     @Override
                     public void fileSelected(final File file) {
                         try {
