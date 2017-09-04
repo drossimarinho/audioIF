@@ -2,13 +2,20 @@ package org.drmsoft.audioif.helpers;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.os.Bundle;
+import android.speech.tts.TextToSpeech;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager.LayoutParams;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import org.drmsoft.audioif.R;
+
 import java.io.File;
 import java.io.FileFilter;
 import java.util.Arrays;
@@ -64,7 +71,6 @@ public class FileChooser {
     public void showDialog() {
         dialog.show();
     }
-
 
     /**
      * Sort, filter and display the files for the given path.

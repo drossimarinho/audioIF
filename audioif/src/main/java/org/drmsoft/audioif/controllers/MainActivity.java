@@ -1,5 +1,6 @@
 package org.drmsoft.audioif.controllers;
 
+import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.speech.RecognizerIntent;
@@ -16,6 +17,7 @@ import org.drmsoft.audioif.R;
 import org.drmsoft.audioif.helpers.Alert;
 import org.drmsoft.audioif.helpers.FileChooser;
 import org.drmsoft.audioif.helpers.FileScanner;
+import org.drmsoft.audioif.helpers.NumberReader;
 import org.drmsoft.audioif.helpers.StoryFileTypeChecker;
 import org.drmsoft.audioif.models.StoryFileType;
 import org.zmpp.ExecutionControl;
@@ -38,8 +40,11 @@ import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Locale;
 
+import static android.R.id.list;
+
 public class MainActivity extends AppCompatActivity implements TextToSpeech.OnInitListener {
 
+    public boolean isFileScannerInput = false;
     private ExecutionControl executionControl;
     private MachineFactory.MachineInitStruct machineInit;
     private BufferedScreenModel screenModel;
@@ -52,6 +57,7 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
     private FileScanner fileScanner;
     private StoryFileTypeChecker storyFileTypeChecker;
     private org.drmsoft.audioif.helpers.Alert Alert;
+    private ProgressDialog progressDialog;
 
     private void startVoiceInput() {
         Runnable r = new Runnable() {
@@ -67,6 +73,7 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
                 intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
                 intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
                 intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "What do you want to do next?");
+                isFileScannerInput = false;
                 try {
                     startActivityForResult(intent, REQ_CODE_SPEECH_INPUT);
                 } catch (ActivityNotFoundException a) {
@@ -83,22 +90,38 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
         switch (requestCode) {
             case REQ_CODE_SPEECH_INPUT: {
                 if (resultCode == RESULT_OK && null != data) {
-                    ArrayList<String> result = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
-                    String voiceInputText = result.get(0);
-                    if(voiceInputText.contains("North West")){
-                        voiceInputText = "NW";
+                    if(isFileScannerInput){
+                        ArrayList<String> result = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+                        String voiceInputText = result.get(0);
+                        try
+                        {
+                            int chosenNumber = Integer.parseInt(NumberReader.replaceNumbers(voiceInputText));
+                            int indexNumber = chosenNumber - 1;
+                            fileScanner.list.performItemClick(fileScanner.list.getChildAt(indexNumber), indexNumber, fileScanner.list.getItemIdAtPosition(indexNumber));
+                        } catch (NumberFormatException e)
+                        {
+                            tts.speak("Number not recognized, try again.", TextToSpeech.QUEUE_FLUSH, null);
+                            fileScanner.startVoiceInput();
+                        }
                     }
-                    else if(voiceInputText.contains("North East")){
-                        voiceInputText = "NE";
+                    else{
+                        ArrayList<String> result = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+                        String voiceInputText = result.get(0);
+                        if(voiceInputText.contains("North West")){
+                            voiceInputText = "NW";
+                        }
+                        else if(voiceInputText.contains("North East")){
+                            voiceInputText = "NE";
+                        }
+                        else if(voiceInputText.contains("South East")){
+                            voiceInputText = "SE";
+                        }
+                        else if(voiceInputText.contains("South West")){
+                            voiceInputText = "SW";
+                        }
+                        commandField.setText(voiceInputText);
+                        handleButtonClick();
                     }
-                    else if(voiceInputText.contains("South East")){
-                        voiceInputText = "SE";
-                    }
-                    else if(voiceInputText.contains("South West")){
-                        voiceInputText = "SW";
-                    }
-                    commandField.setText(voiceInputText);
-                    handleButtonClick();
                 }
                 break;
             }
@@ -113,6 +136,9 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
         storyField = (TextView) findViewById(R.id.textView);
         commandField = (EditText) findViewById(R.id.editText);
         button = (Button) findViewById(R.id.button);
+        progressDialog = ProgressDialog.show(MainActivity.this, "",
+                "Loading. Please wait...", true);
+
         tts = new TextToSpeech(this, this);
         storyFileTypeChecker = new StoryFileTypeChecker();
     }
@@ -184,7 +210,8 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
                 Log.e("TTS", "This Language is not supported");
             } else {
                 //Call speak stuff
-                fileScanner = new FileScanner(this);
+                fileScanner = new FileScanner(this, tts);
+                progressDialog.dismiss();
                 fileScanner.setFileListener(new FileScanner.FileSelectedListener() {
                     @Override
                     public void fileSelected(final File file) {
