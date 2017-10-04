@@ -2,6 +2,9 @@ package org.drmsoft.audioif.helpers;
 
 
 import java.util.StringTokenizer;
+/*
+https://stackoverflow.com/questions/4062022/how-to-convert-words-to-a-number
+ */
 
 public class NumberReader {
     public static final String[] DIGITS = {"one", "two", "three", "four", "five", "six", "seven", "eight", "nine"};

@@ -96,8 +96,14 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
                         try
                         {
                             int chosenNumber = Integer.parseInt(NumberReader.replaceNumbers(voiceInputText));
-                            int indexNumber = chosenNumber - 1;
-                            fileScanner.list.performItemClick(fileScanner.list.getChildAt(indexNumber), indexNumber, fileScanner.list.getItemIdAtPosition(indexNumber));
+                            if(chosenNumber == 0){
+                                tts.speak("Invalid story number, try again.", TextToSpeech.QUEUE_FLUSH, null);
+                                fileScanner.startVoiceInput();
+                            }
+                            else{
+                                int indexNumber = chosenNumber - 1;
+                                fileScanner.list.performItemClick(fileScanner.list.getChildAt(indexNumber), indexNumber, fileScanner.list.getItemIdAtPosition(indexNumber));
+                            }
                         } catch (NumberFormatException e)
                         {
                             tts.speak("Number not recognized, try again.", TextToSpeech.QUEUE_FLUSH, null);
