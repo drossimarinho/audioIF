@@ -19,6 +19,7 @@ import android.widget.TextView;
 import org.drmsoft.audioif.R;
 import org.drmsoft.audioif.helpers.Alert;
 import org.drmsoft.audioif.helpers.FileChooser;
+import org.drmsoft.audioif.helpers.SavedGameManager;
 import org.drmsoft.audioif.helpers.StoryFileTypeChecker;
 import org.drmsoft.audioif.models.StoryFileType;
 import org.zmpp.ExecutionControl;
@@ -40,6 +41,7 @@ import java.io.Reader;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Locale;
+import java.util.logging.Logger;
 
 public class TextModeActivity extends AppCompatActivity {
 
@@ -55,6 +57,9 @@ public class TextModeActivity extends AppCompatActivity {
     private org.drmsoft.audioif.helpers.Alert Alert;
     private ScrollView scrollView;
     private TextView footer;
+    private ArrayList<String> commandList;
+    private SavedGameManager savedGameManager;
+    private String filePath;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,11 +76,15 @@ public class TextModeActivity extends AppCompatActivity {
         footer = (TextView) findViewById(R.id.footer);
         storyFileTypeChecker = new StoryFileTypeChecker();
 
+        commandList = new ArrayList<String>();
+        savedGameManager = new SavedGameManager();
+
         fileChooser = new FileChooser(this);
         fileChooser.setFileListener(new FileChooser.FileSelectedListener() {
             @Override
             public void fileSelected(final File file) {
                 try {
+                    filePath = file.getAbsolutePath();
                     String fileExtension = file.getName().split("\\.")[1];
                     StoryFileType storyFileType = storyFileTypeChecker.GetStoryFileType(fileExtension);
                     storyIs = new FileInputStream(file);
@@ -153,9 +162,41 @@ public class TextModeActivity extends AppCompatActivity {
     }
 
     private void handleButtonClick(){
-        executionControl.resumeWithInput(commandField.getText().toString());
+        String currentCommand = commandField.getText().toString();
+        String currentText = "";
+        if(currentCommand.compareTo("Save") == 0 || currentCommand.compareTo("save") == 0 || currentCommand.compareTo("SAVE") == 0){
+            try {
+                savedGameManager.save(filePath.split("\\.")[0] + ".sav", commandList);
+                currentText = "Game Saved!";
 
-        String currentText = getBufferText(screenModel);
+            }catch (IOException e){
+                Log.d(e.toString(), e.getMessage());
+            }
+        }
+        else if(currentCommand.compareTo("Restore") == 0|| currentCommand.compareTo("restore") == 0 || currentCommand.compareTo("RESTORE") == 0){
+            try {
+                ArrayList<String> loadedCommands =  savedGameManager.read(filePath.split("\\.")[0] + ".sav");
+                commandList = loadedCommands;
+                for(int i = 0; i < loadedCommands.size(); i++){
+                    if(i == loadedCommands.size() - 1){
+                        screenModel.reset();
+                        executionControl.resumeWithInput(loadedCommands.get(i));
+                        currentText = "Game Restored!\n\n" + getBufferText(screenModel);
+                    }
+                    else{
+                        executionControl.resumeWithInput(loadedCommands.get(i));
+                    }
+                }
+            }catch (Exception e){
+
+            }
+        }
+        else{
+            executionControl.resumeWithInput(currentCommand);
+            commandList.add(currentCommand);
+            currentText = getBufferText(screenModel);
+
+        }
         if(currentText.length() > 1){
             storyField.append("\n\n >" + commandField.getText() + "\n\n" + currentText);
             //scrollView.fullScroll(View.FOCUS_DOWN);
