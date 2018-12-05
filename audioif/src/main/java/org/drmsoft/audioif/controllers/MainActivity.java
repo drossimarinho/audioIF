@@ -152,7 +152,7 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
         tts = new TextToSpeech(this, this);
         storyFileTypeChecker = new StoryFileTypeChecker();
         commandList = new ArrayList<String>();
-        savedGameManager = new SavedGameManager();
+
     }
 
     public void executeEngine(){
@@ -262,10 +262,10 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
                 return null;
             }
         };
-        machineInit.saveGameDataStore = new SaveGameDataStore() {
-            public FormChunk retrieveFormChunk() { return null; }
-            public boolean saveFormChunk(WritableFormChunk formchunk) { return false; }
-        };
+
+        savedGameManager = new SavedGameManager(filePath.split("\\.")[0] + ".sav");
+        machineInit.saveGameDataStore = savedGameManager;
+
         machineInit.ioSystem = new IOSystem() {
             public Reader getInputStreamReader() { return null; }
             public Writer getTranscriptWriter() { return null; }
@@ -282,38 +282,10 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
     private void handleButtonClick(){
         String currentCommand = commandField.getText().toString();
         String currentText = "";
-        if(currentCommand.compareTo("Save") == 0 || currentCommand.compareTo("save") == 0 || currentCommand.compareTo("SAVE") == 0){
-            try {
-                savedGameManager.save(filePath.split("\\.")[0] + ".sav", commandList);
-                currentText = "Game Saved!";
 
-            }catch (IOException e){
-                Log.d(e.toString(), e.getMessage());
-            }
-        }
-        else if(currentCommand.compareTo("Restore") == 0|| currentCommand.compareTo("restore") == 0 || currentCommand.compareTo("RESTORE") == 0){
-            try {
-                ArrayList<String> loadedCommands =  savedGameManager.read(filePath.split("\\.")[0] + ".sav");
-                commandList = loadedCommands;
-                for(int i = 0; i < loadedCommands.size(); i++){
-                    if(i == loadedCommands.size() - 1){
-                        screenModel.reset();
-                        executionControl.resumeWithInput(loadedCommands.get(i));
-                        currentText = "Game Restored!\n\n" + getBufferText(screenModel);
-                    }
-                    else{
-                        executionControl.resumeWithInput(loadedCommands.get(i));
-                    }
-                }
-            }catch (Exception e){
-
-            }
-        }
-        else{
-            executionControl.resumeWithInput(currentCommand);
-            commandList.add(currentCommand);
-            currentText = getBufferText(screenModel);
-        }
+        executionControl.resumeWithInput(currentCommand);
+        commandList.add(currentCommand);
+        currentText = getBufferText(screenModel);
 
         if(currentText.length() > 1){
             storyField.setText(currentText);

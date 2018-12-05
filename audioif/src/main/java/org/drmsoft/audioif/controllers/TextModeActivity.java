@@ -23,8 +23,10 @@ import org.drmsoft.audioif.helpers.SavedGameManager;
 import org.drmsoft.audioif.helpers.StoryFileTypeChecker;
 import org.drmsoft.audioif.models.StoryFileType;
 import org.zmpp.ExecutionControl;
+import org.zmpp.base.DefaultMemory;
 import org.zmpp.blorb.NativeImage;
 import org.zmpp.blorb.NativeImageFactory;
+import org.zmpp.iff.DefaultFormChunk;
 import org.zmpp.iff.FormChunk;
 import org.zmpp.iff.WritableFormChunk;
 import org.zmpp.io.IOSystem;
@@ -37,6 +39,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.RandomAccessFile;
 import java.io.Reader;
 import java.io.Writer;
 import java.util.ArrayList;
@@ -77,7 +80,7 @@ public class TextModeActivity extends AppCompatActivity {
         storyFileTypeChecker = new StoryFileTypeChecker();
 
         commandList = new ArrayList<String>();
-        savedGameManager = new SavedGameManager();
+
 
         fileChooser = new FileChooser(this);
         fileChooser.setFileListener(new FileChooser.FileSelectedListener() {
@@ -144,10 +147,9 @@ public class TextModeActivity extends AppCompatActivity {
                 return null;
             }
         };
-        machineInit.saveGameDataStore = new SaveGameDataStore() {
-            public FormChunk retrieveFormChunk() { return null; }
-            public boolean saveFormChunk(WritableFormChunk formchunk) { return false; }
-        };
+        savedGameManager = new SavedGameManager(filePath.split("\\.")[0] + ".sav");
+        machineInit.saveGameDataStore = savedGameManager;
+
         machineInit.ioSystem = new IOSystem() {
             public Reader getInputStreamReader() { return null; }
             public Writer getTranscriptWriter() { return null; }
@@ -164,39 +166,11 @@ public class TextModeActivity extends AppCompatActivity {
     private void handleButtonClick(){
         String currentCommand = commandField.getText().toString();
         String currentText = "";
-        if(currentCommand.compareTo("Save") == 0 || currentCommand.compareTo("save") == 0 || currentCommand.compareTo("SAVE") == 0){
-            try {
-                savedGameManager.save(filePath.split("\\.")[0] + ".sav", commandList);
-                currentText = "Game Saved!";
 
-            }catch (IOException e){
-                Log.d(e.toString(), e.getMessage());
-            }
-        }
-        else if(currentCommand.compareTo("Restore") == 0|| currentCommand.compareTo("restore") == 0 || currentCommand.compareTo("RESTORE") == 0){
-            try {
-                ArrayList<String> loadedCommands =  savedGameManager.read(filePath.split("\\.")[0] + ".sav");
-                commandList = loadedCommands;
-                for(int i = 0; i < loadedCommands.size(); i++){
-                    if(i == loadedCommands.size() - 1){
-                        screenModel.reset();
-                        executionControl.resumeWithInput(loadedCommands.get(i));
-                        currentText = "Game Restored!\n\n" + getBufferText(screenModel);
-                    }
-                    else{
-                        executionControl.resumeWithInput(loadedCommands.get(i));
-                    }
-                }
-            }catch (Exception e){
+        executionControl.resumeWithInput(currentCommand);
+        commandList.add(currentCommand);
+        currentText = getBufferText(screenModel);
 
-            }
-        }
-        else{
-            executionControl.resumeWithInput(currentCommand);
-            commandList.add(currentCommand);
-            currentText = getBufferText(screenModel);
-
-        }
         if(currentText.length() > 1){
             storyField.append("\n\n >" + commandField.getText() + "\n\n" + currentText);
             //scrollView.fullScroll(View.FOCUS_DOWN);

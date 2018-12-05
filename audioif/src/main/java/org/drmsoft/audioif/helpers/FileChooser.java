@@ -3,6 +3,7 @@ package org.drmsoft.audioif.helpers;
 import android.app.Activity;
 import android.app.Dialog;
 import android.os.Bundle;
+import android.os.Environment;
 import android.speech.tts.TextToSpeech;
 import android.view.View;
 import android.view.ViewGroup;
@@ -65,7 +66,7 @@ public class FileChooser {
         });
         dialog.setContentView(list);
         dialog.getWindow().setLayout(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT);
-        refresh(getChosenFile("/sdcard/Download/if"));
+        refresh(getChosenFile(Environment.getExternalStorageDirectory().getPath()));
     }
 
     public void showDialog() {
@@ -102,6 +103,13 @@ public class FileChooser {
             // convert to an array
             int i = 0;
             String[] fileList;
+
+            if(dirs == null){
+                dirs = new File[0];
+            }
+            if(files == null){
+                files = new File[0];
+            }
             if (path.getParentFile() == null) {
                 fileList = new String[dirs.length + files.length];
             } else {
