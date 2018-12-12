@@ -60,7 +60,6 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
     private StoryFileTypeChecker storyFileTypeChecker;
     private org.drmsoft.audioif.helpers.Alert Alert;
     private ProgressDialog progressDialog;
-    private ArrayList<String> commandList;
     private SavedGameManager savedGameManager;
     private String filePath;
 
@@ -153,8 +152,6 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
 
         tts = new TextToSpeech(this, this);
         storyFileTypeChecker = new StoryFileTypeChecker();
-        commandList = new ArrayList<String>();
-
     }
 
     public void executeEngine(){
@@ -286,7 +283,6 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
         String currentText = "";
 
         executionControl.resumeWithInput(currentCommand);
-        commandList.add(currentCommand);
         currentText = getBufferText(screenModel);
 
         if(currentText.length() > 1){

@@ -60,7 +60,6 @@ public class TextModeActivity extends AppCompatActivity {
     private org.drmsoft.audioif.helpers.Alert Alert;
     private ScrollView scrollView;
     private TextView footer;
-    private ArrayList<String> commandList;
     private SavedGameManager savedGameManager;
     private String filePath;
 
@@ -78,9 +77,6 @@ public class TextModeActivity extends AppCompatActivity {
         scrollView = (ScrollView) findViewById(R.id.scrollView);
         footer = (TextView) findViewById(R.id.footer);
         storyFileTypeChecker = new StoryFileTypeChecker();
-
-        commandList = new ArrayList<String>();
-
 
         fileChooser = new FileChooser(this);
         fileChooser.setFileListener(new FileChooser.FileSelectedListener() {
@@ -168,7 +164,6 @@ public class TextModeActivity extends AppCompatActivity {
         String currentText = "";
 
         executionControl.resumeWithInput(currentCommand);
-        commandList.add(currentCommand);
         currentText = getBufferText(screenModel);
 
         if(currentText.length() > 1){
