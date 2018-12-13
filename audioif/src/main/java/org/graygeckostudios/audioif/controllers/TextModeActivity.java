@@ -1,37 +1,29 @@
-package org.drmsoft.audioif.controllers;
+package org.graygeckostudios.audioif.controllers;
 
-import android.content.ActivityNotFoundException;
-import android.content.Intent;
-import android.speech.RecognizerIntent;
-import android.speech.tts.TextToSpeech;
+import android.app.ProgressDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.Window;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import org.drmsoft.audioif.R;
-import org.drmsoft.audioif.helpers.Alert;
-import org.drmsoft.audioif.helpers.FileChooser;
-import org.drmsoft.audioif.helpers.SavedGameManager;
-import org.drmsoft.audioif.helpers.StoryFileTypeChecker;
-import org.drmsoft.audioif.models.StoryFileType;
+import org.graygeckostudios.audioif.R;
+import org.graygeckostudios.audioif.helpers.Alert;
+import org.graygeckostudios.audioif.helpers.FileChooser;
+import org.graygeckostudios.audioif.helpers.FileScanner;
+import org.graygeckostudios.audioif.helpers.SavedGameManager;
+import org.graygeckostudios.audioif.helpers.StoryFileTypeChecker;
+import org.graygeckostudios.audioif.models.StoryFileType;
 import org.zmpp.ExecutionControl;
-import org.zmpp.base.DefaultMemory;
 import org.zmpp.blorb.NativeImage;
 import org.zmpp.blorb.NativeImageFactory;
-import org.zmpp.iff.DefaultFormChunk;
-import org.zmpp.iff.FormChunk;
-import org.zmpp.iff.WritableFormChunk;
 import org.zmpp.io.IOSystem;
 import org.zmpp.vm.MachineFactory;
-import org.zmpp.vm.SaveGameDataStore;
 import org.zmpp.windowing.AnnotatedText;
 import org.zmpp.windowing.BufferedScreenModel;
 
@@ -39,12 +31,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.RandomAccessFile;
 import java.io.Reader;
 import java.io.Writer;
-import java.util.ArrayList;
-import java.util.Locale;
-import java.util.logging.Logger;
 
 public class TextModeActivity extends AppCompatActivity {
 
@@ -55,11 +43,12 @@ public class TextModeActivity extends AppCompatActivity {
     private EditText commandField;
     private Button button;
     private InputStream storyIs;
-    private FileChooser fileChooser;
+    private FileScanner fileScanner;
     private StoryFileTypeChecker storyFileTypeChecker;
-    private org.drmsoft.audioif.helpers.Alert Alert;
+    private org.graygeckostudios.audioif.helpers.Alert Alert;
     private ScrollView scrollView;
     private TextView footer;
+    private ProgressDialog progressDialog;
     private SavedGameManager savedGameManager;
     private String filePath;
 
@@ -74,12 +63,15 @@ public class TextModeActivity extends AppCompatActivity {
         storyField.setText("");
         commandField = (EditText) findViewById(R.id.editText);
         button = (Button) findViewById(R.id.button);
+        progressDialog = ProgressDialog.show(TextModeActivity.this, "",
+                "Loading. Please wait...", true);
         scrollView = (ScrollView) findViewById(R.id.scrollView);
         footer = (TextView) findViewById(R.id.footer);
         storyFileTypeChecker = new StoryFileTypeChecker();
 
-        fileChooser = new FileChooser(this);
-        fileChooser.setFileListener(new FileChooser.FileSelectedListener() {
+        fileScanner = new FileScanner(this);
+        progressDialog.dismiss();
+        fileScanner.setFileListener(new FileScanner.FileSelectedListener() {
             @Override
             public void fileSelected(final File file) {
                 try {
@@ -168,10 +160,11 @@ public class TextModeActivity extends AppCompatActivity {
 
         if(currentText.length() > 1){
             storyField.append("\n\n >" + commandField.getText() + "\n\n" + currentText);
-            //scrollView.fullScroll(View.FOCUS_DOWN);
             footer.requestFocus();
-            //scrollView.scrollTo(0, scrollView.getBottom());
             commandField.setText("");
+            commandField.requestFocus();
+            InputMethodManager inputMethodManager = (InputMethodManager) this.getSystemService(this.INPUT_METHOD_SERVICE);
+            inputMethodManager.toggleSoftInputFromWindow(this.getCurrentFocus().getWindowToken(), InputMethodManager.SHOW_FORCED, 0);
         }
         else{
             commandField.setText(" ");

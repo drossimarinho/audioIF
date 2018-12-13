@@ -1,4 +1,4 @@
-package org.drmsoft.audioif.controllers;
+package org.graygeckostudios.audioif.controllers;
 
 import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
@@ -14,22 +14,18 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import org.drmsoft.audioif.R;
-import org.drmsoft.audioif.helpers.Alert;
-import org.drmsoft.audioif.helpers.FileChooser;
-import org.drmsoft.audioif.helpers.FileScanner;
-import org.drmsoft.audioif.helpers.NumberReader;
-import org.drmsoft.audioif.helpers.SavedGameManager;
-import org.drmsoft.audioif.helpers.StoryFileTypeChecker;
-import org.drmsoft.audioif.models.StoryFileType;
+import org.graygeckostudios.audioif.R;
+import org.graygeckostudios.audioif.helpers.Alert;
+import org.graygeckostudios.audioif.helpers.VoiceFileScanner;
+import org.graygeckostudios.audioif.helpers.NumberReader;
+import org.graygeckostudios.audioif.helpers.SavedGameManager;
+import org.graygeckostudios.audioif.helpers.StoryFileTypeChecker;
+import org.graygeckostudios.audioif.models.StoryFileType;
 import org.zmpp.ExecutionControl;
 import org.zmpp.blorb.NativeImage;
 import org.zmpp.blorb.NativeImageFactory;
-import org.zmpp.iff.FormChunk;
-import org.zmpp.iff.WritableFormChunk;
 import org.zmpp.io.IOSystem;
 import org.zmpp.vm.MachineFactory;
-import org.zmpp.vm.SaveGameDataStore;
 import org.zmpp.windowing.AnnotatedText;
 import org.zmpp.windowing.BufferedScreenModel;
 
@@ -41,8 +37,6 @@ import java.io.Reader;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Locale;
-
-import static android.R.id.list;
 
 public class MainActivity extends AppCompatActivity implements TextToSpeech.OnInitListener {
 
@@ -56,9 +50,9 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
     private static final int REQ_CODE_SPEECH_INPUT = 100;
     private TextToSpeech tts;
     private InputStream storyIs;
-    private FileScanner fileScanner;
+    private VoiceFileScanner voiceFileScanner;
     private StoryFileTypeChecker storyFileTypeChecker;
-    private org.drmsoft.audioif.helpers.Alert Alert;
+    private org.graygeckostudios.audioif.helpers.Alert Alert;
     private ProgressDialog progressDialog;
     private SavedGameManager savedGameManager;
     private String filePath;
@@ -102,16 +96,16 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
                             int chosenNumber = Integer.parseInt(NumberReader.replaceNumbers(voiceInputText));
                             if(chosenNumber == 0){
                                 tts.speak("Invalid story number, try again.", TextToSpeech.QUEUE_FLUSH, null);
-                                fileScanner.startVoiceInput();
+                                voiceFileScanner.startVoiceInput();
                             }
                             else{
                                 int indexNumber = chosenNumber - 1;
-                                fileScanner.list.performItemClick(fileScanner.list.getChildAt(indexNumber), indexNumber, fileScanner.list.getItemIdAtPosition(indexNumber));
+                                voiceFileScanner.list.performItemClick(voiceFileScanner.list.getChildAt(indexNumber), indexNumber, voiceFileScanner.list.getItemIdAtPosition(indexNumber));
                             }
                         } catch (NumberFormatException e)
                         {
                             tts.speak("Number not recognized, try again.", TextToSpeech.QUEUE_FLUSH, null);
-                            fileScanner.startVoiceInput();
+                            voiceFileScanner.startVoiceInput();
                         }
                     }
                     else{
@@ -221,9 +215,9 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
                 Log.e("TTS", "This Language is not supported");
             } else {
                 //Call speak stuff
-                fileScanner = new FileScanner(this, tts);
+                voiceFileScanner = new VoiceFileScanner(this, tts);
                 progressDialog.dismiss();
-                fileScanner.setFileListener(new FileScanner.FileSelectedListener() {
+                voiceFileScanner.setFileListener(new VoiceFileScanner.FileSelectedListener() {
                     @Override
                     public void fileSelected(final File file) {
                         try {

@@ -1,6 +1,6 @@
-package org.drmsoft.audioif.helpers;
+package org.graygeckostudios.audioif.helpers;
 
-import org.drmsoft.audioif.models.StoryFileType;
+import org.graygeckostudios.audioif.models.StoryFileType;
 import org.zmpp.vm.InvalidStoryException;
 
 /**

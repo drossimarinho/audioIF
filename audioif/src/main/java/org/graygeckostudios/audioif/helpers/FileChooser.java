@@ -1,21 +1,15 @@
-package org.drmsoft.audioif.helpers;
+package org.graygeckostudios.audioif.helpers;
 
 import android.app.Activity;
 import android.app.Dialog;
-import android.os.Bundle;
 import android.os.Environment;
-import android.speech.tts.TextToSpeech;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager.LayoutParams;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
-
-import org.drmsoft.audioif.R;
 
 import java.io.File;
 import java.io.FileFilter;

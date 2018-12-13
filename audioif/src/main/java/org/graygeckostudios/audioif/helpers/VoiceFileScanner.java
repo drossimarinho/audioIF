@@ -1,13 +1,11 @@
-package org.drmsoft.audioif.helpers;
+package org.graygeckostudios.audioif.helpers;
 
-import android.app.Activity;
 import android.app.Dialog;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
-import android.os.Bundle;
+import android.os.Environment;
 import android.speech.RecognizerIntent;
 import android.speech.tts.TextToSpeech;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,23 +15,21 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import org.drmsoft.audioif.controllers.MainActivity;
+import org.graygeckostudios.audioif.controllers.MainActivity;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Locale;
 
-import static android.R.id.list;
-import static android.app.Activity.RESULT_OK;
 import static java.lang.Integer.parseInt;
 
-public class FileScanner {
+public class VoiceFileScanner {
 
 
     public  final String STORY_EXTENSIONS = "(?i).+\\.(z[1-8]|zblorb|zlb)$";
     private final MainActivity activity;
     private static final int REQ_CODE_SPEECH_INPUT = 100;
-    public static final String EXTRA_IS_FILESCANNER = "org.drmsoft.audioif.helpers.FILESCANNER";
+    public static final String EXTRA_IS_FILESCANNER = "org.graygeckostudios.audioif.helpers.FILESCANNER";
     public ListView list;
     private Dialog dialog;
     private File currentPath;
@@ -42,14 +38,14 @@ public class FileScanner {
     public interface FileSelectedListener {
         void fileSelected(File file);
     }
-    public FileScanner setFileListener(FileSelectedListener fileListener) {
+    public VoiceFileScanner setFileListener(FileSelectedListener fileListener) {
         this.fileListener = fileListener;
         return this;
     }
     private FileSelectedListener fileListener;
 
 
-    public FileScanner(MainActivity activity, TextToSpeech tts) {
+    public VoiceFileScanner(MainActivity activity, TextToSpeech tts) {
         this.activity = activity;
         this.tts = tts;
         dialog = new Dialog(activity);
@@ -67,7 +63,7 @@ public class FileScanner {
         });
         dialog.setContentView(list);
         dialog.getWindow().setLayout(WindowManager.LayoutParams.FILL_PARENT, WindowManager.LayoutParams.FILL_PARENT);
-        ArrayList<String> fileList = scanDir(getChosenFile("/sdcard"),new ArrayList<String>());
+        ArrayList<String> fileList = scanDir(getChosenFile(Environment.getExternalStorageDirectory().getPath()),new ArrayList<String>());
         list.setAdapter(new ArrayAdapter(activity,
                 android.R.layout.simple_list_item_1, fileList) {
             @Override public View getView(int pos, View view, ViewGroup parent) {

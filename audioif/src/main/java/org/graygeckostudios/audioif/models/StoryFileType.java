@@ -1,4 +1,4 @@
-package org.drmsoft.audioif.models;
+package org.graygeckostudios.audioif.models;
 
 public enum StoryFileType {
     ZFILE,
