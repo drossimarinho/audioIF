@@ -23,6 +23,13 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <Button
+            android:id="@+id/linkButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Browse supported games" />
+
+        <Button
             android:id="@+id/audioButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

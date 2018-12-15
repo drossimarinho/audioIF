@@ -1,6 +1,7 @@
 package org.graygeckostudios.audioif.controllers;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -16,6 +17,7 @@ public class MenuActivity extends AppCompatActivity {
         setContentView(R.layout.activity_menu);
         Button audioButton = (Button)findViewById(R.id.audioButton);
         Button textButton = (Button)findViewById(R.id.textButton);
+        Button linkButton = (Button)findViewById(R.id.linkButton);
         audioButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -26,6 +28,13 @@ public class MenuActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 loadNewActivity(TextModeActivity.class);
+            }
+        });
+        linkButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://ifarchive.org/indexes/if-archiveXgamesXzcode.html"));
+                startActivity(browserIntent);
             }
         });
     }

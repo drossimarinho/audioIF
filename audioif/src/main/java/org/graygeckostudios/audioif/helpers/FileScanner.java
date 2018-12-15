@@ -1,7 +1,9 @@
 package org.graygeckostudios.audioif.helpers;
 
 import android.app.Dialog;
+import android.app.DialogFragment;
 import android.content.ActivityNotFoundException;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Environment;
 import android.speech.RecognizerIntent;
@@ -31,10 +33,22 @@ public class FileScanner {
     private Dialog dialog;
     private File currentPath;
     private ArrayList<String> filePathList;
+    private File chosenFile;
 
     public interface FileSelectedListener {
         void fileSelected(File file);
     }
+
+    public interface FileDialogDismissedListener{
+        void dialogDismissed();
+    }
+
+    public FileScanner setDialogDismissListener(FileDialogDismissedListener dialogDismissListener){
+        this.dialogDismissListener = dialogDismissListener;
+        return this;
+    }
+
+    private FileDialogDismissedListener dialogDismissListener;
     public FileScanner setFileListener(FileSelectedListener fileListener) {
         this.fileListener = fileListener;
         return this;
@@ -55,12 +69,20 @@ public class FileScanner {
                        break;
                    }
                 }
-                File chosenFile = getChosenFile(fileChosen);
+                chosenFile = getChosenFile(fileChosen);
 
                     if (fileListener != null) {
                         fileListener.fileSelected(chosenFile);
                     }
                     dialog.dismiss();
+            }
+        });
+        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialogInterface) {
+                if(chosenFile == null && dialogDismissListener != null){
+                    dialogDismissListener.dialogDismissed();
+                }
             }
         });
         dialog.setContentView(list);

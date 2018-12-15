@@ -51,14 +51,17 @@ public class TextModeActivity extends AppCompatActivity {
     private ProgressDialog progressDialog;
     private SavedGameManager savedGameManager;
     private String filePath;
+    private TextModeActivity activity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        activity = this;
         Alert = new Alert(this);
         super.onCreate(savedInstanceState);
         getSupportActionBar().hide();
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_text_mode);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         storyField = (TextView) findViewById(R.id.textView);
         storyField.setText("");
         commandField = (EditText) findViewById(R.id.editText);
@@ -71,6 +74,12 @@ public class TextModeActivity extends AppCompatActivity {
 
         fileScanner = new FileScanner(this);
         progressDialog.dismiss();
+        fileScanner.setDialogDismissListener(new FileScanner.FileDialogDismissedListener() {
+            @Override
+            public void dialogDismissed() {
+                activity.finish();
+            }
+        });
         fileScanner.setFileListener(new FileScanner.FileSelectedListener() {
             @Override
             public void fileSelected(final File file) {
@@ -106,9 +115,6 @@ public class TextModeActivity extends AppCompatActivity {
             String initialText = getBufferText(screenModel);
             if(initialText.length() > 1){
                 storyField.append(initialText);
-                //scrollView.fullScroll(View.FOCUS_DOWN);
-                //footer.requestFocus();
-                //scrollView.scrollTo(0, scrollView.getBottom());
             }
             else{
                 commandField.setText(" ");
@@ -162,9 +168,13 @@ public class TextModeActivity extends AppCompatActivity {
             storyField.append("\n\n >" + commandField.getText() + "\n\n" + currentText);
             footer.requestFocus();
             commandField.setText("");
-            commandField.requestFocus();
-            InputMethodManager inputMethodManager = (InputMethodManager) this.getSystemService(this.INPUT_METHOD_SERVICE);
-            inputMethodManager.toggleSoftInputFromWindow(this.getCurrentFocus().getWindowToken(), InputMethodManager.SHOW_FORCED, 0);
+
+//            boolean isLandscape = this.getResources().getBoolean(R.bool.is_landscape);
+//            if(!isLandscape){
+//                commandField.requestFocus();
+//                InputMethodManager inputMethodManager = (InputMethodManager) this.getSystemService(this.INPUT_METHOD_SERVICE);
+//                inputMethodManager.toggleSoftInputFromWindow(this.getCurrentFocus().getWindowToken(), InputMethodManager.SHOW_FORCED, 0);
+//            }
         }
         else{
             commandField.setText(" ");
