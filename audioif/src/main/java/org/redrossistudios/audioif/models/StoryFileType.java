@@ -1,4 +1,4 @@
-package org.graygeckostudios.audioif.models;
+package org.redrossistudios.audioif.models;
 
 public enum StoryFileType {
     ZFILE,

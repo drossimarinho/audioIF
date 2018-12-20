@@ -1,4 +1,4 @@
-package org.graygeckostudios.audioif.helpers;
+package org.redrossistudios.audioif.helpers;
 
 import org.zmpp.base.DefaultMemory;
 import org.zmpp.iff.DefaultFormChunk;

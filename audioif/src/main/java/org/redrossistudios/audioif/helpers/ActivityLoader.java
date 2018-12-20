@@ -1,4 +1,4 @@
-package org.graygeckostudios.audioif.helpers;
+package org.redrossistudios.audioif.helpers;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;

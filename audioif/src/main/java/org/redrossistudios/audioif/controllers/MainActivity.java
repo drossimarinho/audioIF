@@ -1,4 +1,4 @@
-package org.graygeckostudios.audioif.controllers;
+package org.redrossistudios.audioif.controllers;
 
 import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
@@ -14,13 +14,13 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import org.graygeckostudios.audioif.R;
-import org.graygeckostudios.audioif.helpers.Alert;
-import org.graygeckostudios.audioif.helpers.VoiceFileScanner;
-import org.graygeckostudios.audioif.helpers.NumberReader;
-import org.graygeckostudios.audioif.helpers.SavedGameManager;
-import org.graygeckostudios.audioif.helpers.StoryFileTypeChecker;
-import org.graygeckostudios.audioif.models.StoryFileType;
+import org.redrossistudios.audioif.R;
+import org.redrossistudios.audioif.helpers.Alert;
+import org.redrossistudios.audioif.helpers.VoiceFileScanner;
+import org.redrossistudios.audioif.helpers.NumberReader;
+import org.redrossistudios.audioif.helpers.SavedGameManager;
+import org.redrossistudios.audioif.helpers.StoryFileTypeChecker;
+import org.redrossistudios.audioif.models.StoryFileType;
 import org.zmpp.ExecutionControl;
 import org.zmpp.blorb.NativeImage;
 import org.zmpp.blorb.NativeImageFactory;
@@ -52,7 +52,7 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
     private InputStream storyIs;
     private VoiceFileScanner voiceFileScanner;
     private StoryFileTypeChecker storyFileTypeChecker;
-    private org.graygeckostudios.audioif.helpers.Alert Alert;
+    private org.redrossistudios.audioif.helpers.Alert Alert;
     private ProgressDialog progressDialog;
     private SavedGameManager savedGameManager;
     private String filePath;

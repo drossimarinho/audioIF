@@ -1,6 +1,6 @@
-package org.graygeckostudios.audioif.helpers;
+package org.redrossistudios.audioif.helpers;
 
-import org.graygeckostudios.audioif.models.StoryFileType;
+import org.redrossistudios.audioif.models.StoryFileType;
 import org.zmpp.vm.InvalidStoryException;
 
 /**

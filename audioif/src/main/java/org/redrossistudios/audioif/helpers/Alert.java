@@ -1,4 +1,4 @@
-package org.graygeckostudios.audioif.helpers;
+package org.redrossistudios.audioif.helpers;
 
 import android.app.Activity;
 import android.app.AlertDialog;

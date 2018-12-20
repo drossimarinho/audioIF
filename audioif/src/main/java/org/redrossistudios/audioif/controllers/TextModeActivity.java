@@ -1,4 +1,4 @@
-package org.graygeckostudios.audioif.controllers;
+package org.redrossistudios.audioif.controllers;
 
 import android.app.ProgressDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -6,19 +6,17 @@ import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import org.graygeckostudios.audioif.R;
-import org.graygeckostudios.audioif.helpers.Alert;
-import org.graygeckostudios.audioif.helpers.FileChooser;
-import org.graygeckostudios.audioif.helpers.FileScanner;
-import org.graygeckostudios.audioif.helpers.SavedGameManager;
-import org.graygeckostudios.audioif.helpers.StoryFileTypeChecker;
-import org.graygeckostudios.audioif.models.StoryFileType;
+import org.redrossistudios.audioif.R;
+import org.redrossistudios.audioif.helpers.Alert;
+import org.redrossistudios.audioif.helpers.FileScanner;
+import org.redrossistudios.audioif.helpers.SavedGameManager;
+import org.redrossistudios.audioif.helpers.StoryFileTypeChecker;
+import org.redrossistudios.audioif.models.StoryFileType;
 import org.zmpp.ExecutionControl;
 import org.zmpp.blorb.NativeImage;
 import org.zmpp.blorb.NativeImageFactory;
@@ -45,7 +43,7 @@ public class TextModeActivity extends AppCompatActivity {
     private InputStream storyIs;
     private FileScanner fileScanner;
     private StoryFileTypeChecker storyFileTypeChecker;
-    private org.graygeckostudios.audioif.helpers.Alert Alert;
+    private org.redrossistudios.audioif.helpers.Alert Alert;
     private ScrollView scrollView;
     private TextView footer;
     private ProgressDialog progressDialog;

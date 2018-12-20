@@ -1,14 +1,8 @@
-package org.graygeckostudios.audioif.helpers;
+package org.redrossistudios.audioif.helpers;
 
 import android.app.Dialog;
-import android.app.DialogFragment;
-import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Environment;
-import android.speech.RecognizerIntent;
-import android.speech.tts.TextToSpeech;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -17,12 +11,10 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import org.graygeckostudios.audioif.controllers.MainActivity;
-import org.graygeckostudios.audioif.controllers.TextModeActivity;
+import org.redrossistudios.audioif.controllers.TextModeActivity;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Locale;
 
 public class FileScanner {
 

@@ -1,4 +1,4 @@
-package org.graygeckostudios.audioif.helpers;
+package org.redrossistudios.audioif.helpers;
 
 import android.app.Dialog;
 import android.content.ActivityNotFoundException;
@@ -15,7 +15,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import org.graygeckostudios.audioif.controllers.MainActivity;
+import org.redrossistudios.audioif.controllers.MainActivity;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -29,7 +29,7 @@ public class VoiceFileScanner {
     public  final String STORY_EXTENSIONS = "(?i).+\\.(z[1-8]|zblorb|zlb)$";
     private final MainActivity activity;
     private static final int REQ_CODE_SPEECH_INPUT = 100;
-    public static final String EXTRA_IS_FILESCANNER = "org.graygeckostudios.audioif.helpers.FILESCANNER";
+    public static final String EXTRA_IS_FILESCANNER = "org.redrossistudios.audioif.helpers.FILESCANNER";
     public ListView list;
     private Dialog dialog;
     private File currentPath;
