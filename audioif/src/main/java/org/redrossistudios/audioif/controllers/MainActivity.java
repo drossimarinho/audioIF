@@ -41,6 +41,7 @@ import java.util.Locale;
 public class MainActivity extends AppCompatActivity implements TextToSpeech.OnInitListener {
 
     public boolean isFileScannerInput = false;
+    public boolean isFileManuallyChosen = false;
     private ExecutionControl executionControl;
     private MachineFactory.MachineInitStruct machineInit;
     private BufferedScreenModel screenModel;

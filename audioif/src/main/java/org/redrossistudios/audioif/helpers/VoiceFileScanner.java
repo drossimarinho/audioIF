@@ -34,6 +34,7 @@ public class VoiceFileScanner {
     private Dialog dialog;
     private File currentPath;
     private TextToSpeech tts;
+    private Thread speechThread;
 
     public interface FileSelectedListener {
         void fileSelected(File file);
@@ -45,7 +46,7 @@ public class VoiceFileScanner {
     private FileSelectedListener fileListener;
 
 
-    public VoiceFileScanner(MainActivity activity, TextToSpeech tts) {
+    public VoiceFileScanner(final MainActivity activity, TextToSpeech tts) {
         this.activity = activity;
         this.tts = tts;
         dialog = new Dialog(activity);
@@ -57,6 +58,12 @@ public class VoiceFileScanner {
 
                     if (fileListener != null) {
                         fileListener.fileSelected(chosenFile);
+                        if(!speechThread.isInterrupted()){
+                            speechThread.interrupt();
+                            speechThread = null;
+                        }
+                        activity.isFileScannerInput = false;
+                        activity.isFileManuallyChosen = true;
                     }
                     dialog.dismiss();
             }
@@ -109,57 +116,39 @@ public class VoiceFileScanner {
         Runnable r = new Runnable() {
             public void run() {
                 try{
-                    while(tts.isSpeaking()){
-                        try {
-                            Thread.sleep(1000);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
+                    if(activity.isFileManuallyChosen){
+                       tts.stop();
                     }
-                    Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-                    intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
-                    intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
-                    intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Which game do you want to play?");
-                    activity.isFileScannerInput = true;
-                    intent.putExtra(EXTRA_IS_FILESCANNER, true);
-                    try {
-                        activity.startActivityForResult(intent, REQ_CODE_SPEECH_INPUT);
-                    } catch (ActivityNotFoundException a) {
+                     else{
+                        while (tts.isSpeaking()) {
+                            try {
+                                Thread.sleep(1000);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        if(activity.isFileManuallyChosen){
+                            return;
+                        }
+                        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+                        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+                        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
+                        intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Which game do you want to play?");
+                        activity.isFileScannerInput = true;
+                        intent.putExtra(EXTRA_IS_FILESCANNER, true);
+                        try {
+                            activity.startActivityForResult(intent, REQ_CODE_SPEECH_INPUT);
+                        } catch (ActivityNotFoundException a) {
 
+                        }
                     }
                 }catch (Exception e){
                     Log.d(e.toString(), e.getMessage());
                 }
 
             }};
-        Thread t = new Thread(r);
-        t.start();
+        speechThread = new Thread(r);
+        speechThread.start();
     }
-
-//        @Override
-//        protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-//            super.onActivityResult(requestCode, resultCode, data);
-//
-//            switch (requestCode) {
-//                case REQ_CODE_SPEECH_INPUT: {
-//                    if (resultCode == RESULT_OK && null != data) {
-//                        ArrayList<String> result = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
-//                        String voiceInputText = result.get(0);
-//                        try
-//                        {
-//                            int chosenNumber = Integer.parseInt(voiceInputText);
-//                            int indexNumber = chosenNumber - 1;
-//                            list.performItemClick(list.getChildAt(indexNumber), indexNumber, list.getItemIdAtPosition(indexNumber));
-//                        } catch (NumberFormatException e)
-//                        {
-//                            tts.speak("Number not recognized, try again.", TextToSpeech.QUEUE_FLUSH, null);
-//                            startVoiceInput();
-//                        }
-//                    }
-//                    break;
-//                }
-//
-//            }
-//        }
 
 }
