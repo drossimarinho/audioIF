@@ -36,7 +36,7 @@ How to play quick guide:
 http://www.microheaven.com/ifguide/step3.html
 
 
-Supported formats: Z-Machine games
+Supported formats: Z-Machine games<br />
 -.z[1-8] <br />
 -.zblorb<br />
 -.zlb
