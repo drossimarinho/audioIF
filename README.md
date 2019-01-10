@@ -1,6 +1,8 @@
 # audioIF
 audio IF - Audio Interactive Fiction - Play story games in a dynamic listen-talk gameplay - Android
 
+Google Play link: https://play.google.com/store/apps/details?id=org.redrossistudios.audioif
+
 Interactive fiction, Text adveture games, Story games, Interactive fiction interpreter, Z-Machine Interpreter, Z-Code games.
 
 Play your favorite interactive fiction games in a listen-talk way.
@@ -8,7 +10,7 @@ At each step the text adventure is read for you, and then waits for your voice c
 
 2 modes:
 
--Text mode: regular interactive fiction gameplay with reading and writing
+-Text mode: regular interactive fiction gameplay with reading and writing<br />
 -Audio mode: dynamic listen-talk gameplay
 
 I tried to make the app easy to use for blind people. 
@@ -35,9 +37,9 @@ http://www.microheaven.com/ifguide/step3.html
 
 
 Supported formats: Z-Machine games
--.z[1-8]
--.zblorb
--zlb
+-.z[1-8] <br />
+-.zblorb<br />
+-.zlb
 
 
 The core of this application uses the ZMPP interpreter project: https://sourceforge.net/projects/zmpp/
