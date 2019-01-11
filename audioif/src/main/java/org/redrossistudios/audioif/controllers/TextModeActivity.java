@@ -1,6 +1,7 @@
 package org.redrossistudios.audioif.controllers;
 
 import android.app.ProgressDialog;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.KeyEvent;
@@ -71,7 +72,7 @@ public class TextModeActivity extends AppCompatActivity {
         storyFileTypeChecker = new StoryFileTypeChecker();
 
         fileScanner = new FileScanner(this);
-        progressDialog.dismiss();
+
         fileScanner.setDialogDismissListener(new FileScanner.FileDialogDismissedListener() {
             @Override
             public void dialogDismissed() {
@@ -95,7 +96,7 @@ public class TextModeActivity extends AppCompatActivity {
 
             }
         }).showDialog();
-
+        progressDialog.dismiss();
     }
 
     public void executeEngine(){

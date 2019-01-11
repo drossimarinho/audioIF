@@ -16,8 +16,7 @@ import android.widget.TextView;
 
 import org.redrossistudios.audioif.R;
 import org.redrossistudios.audioif.helpers.Alert;
-import org.redrossistudios.audioif.helpers.VoiceFileScanner;
-import org.redrossistudios.audioif.helpers.NumberReader;
+import org.redrossistudios.audioif.helpers.FileScanner;
 import org.redrossistudios.audioif.helpers.SavedGameManager;
 import org.redrossistudios.audioif.helpers.StoryFileTypeChecker;
 import org.redrossistudios.audioif.models.StoryFileType;
@@ -51,12 +50,13 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
     private static final int REQ_CODE_SPEECH_INPUT = 100;
     private TextToSpeech tts;
     private InputStream storyIs;
-    private VoiceFileScanner voiceFileScanner;
+    private FileScanner fileScanner;
     private StoryFileTypeChecker storyFileTypeChecker;
     private org.redrossistudios.audioif.helpers.Alert Alert;
     private ProgressDialog progressDialog;
     private SavedGameManager savedGameManager;
     private String filePath;
+    private MainActivity activity;
 
     private void startVoiceInput() {
         Runnable r = new Runnable() {
@@ -89,27 +89,27 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
         switch (requestCode) {
             case REQ_CODE_SPEECH_INPUT: {
                 if (resultCode == RESULT_OK && null != data) {
-                    if(isFileScannerInput){
-                        ArrayList<String> result = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
-                        String voiceInputText = result.get(0);
-                        try
-                        {
-                            int chosenNumber = Integer.parseInt(NumberReader.replaceNumbers(voiceInputText));
-                            if(chosenNumber == 0){
-                                tts.speak("Invalid story number, try again.", TextToSpeech.QUEUE_FLUSH, null);
-                                voiceFileScanner.startVoiceInput();
-                            }
-                            else{
-                                int indexNumber = chosenNumber - 1;
-                                voiceFileScanner.list.performItemClick(voiceFileScanner.list.getChildAt(indexNumber), indexNumber, voiceFileScanner.list.getItemIdAtPosition(indexNumber));
-                            }
-                        } catch (NumberFormatException e)
-                        {
-                            tts.speak("Number not recognized, try again.", TextToSpeech.QUEUE_FLUSH, null);
-                            voiceFileScanner.startVoiceInput();
-                        }
-                    }
-                    else{
+//                    if(isFileScannerInput){
+//                        ArrayList<String> result = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+//                        String voiceInputText = result.get(0);
+//                        try
+//                        {
+//                            int chosenNumber = Integer.parseInt(NumberReader.replaceNumbers(voiceInputText));
+//                            if(chosenNumber == 0){
+//                                tts.speak("Invalid story number, try again.", TextToSpeech.QUEUE_FLUSH, null);
+//                                fileScanner.startVoiceInput();
+//                            }
+//                            else{
+//                                int indexNumber = chosenNumber - 1;
+//                                fileScanner.list.performItemClick(fileScanner.list.getChildAt(indexNumber), indexNumber, fileScanner.list.getItemIdAtPosition(indexNumber));
+//                            }
+//                        } catch (NumberFormatException e)
+//                        {
+//                            tts.speak("Number not recognized, try again.", TextToSpeech.QUEUE_FLUSH, null);
+//                            fileScanner.startVoiceInput();
+//                        }
+//                    }
+                    //else{
                         ArrayList<String> result = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
                         String voiceInputText = result.get(0);
                         if(voiceInputText.contains("North West")){
@@ -126,7 +126,7 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
                         }
                         commandField.setText(voiceInputText);
                         handleButtonClick();
-                    }
+                    //}
                 }
                 break;
             }
@@ -135,6 +135,7 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
     }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        activity = this;
         Alert = new Alert(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -216,9 +217,15 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
                 Log.e("TTS", "This Language is not supported");
             } else {
                 //Call speak stuff
-                voiceFileScanner = new VoiceFileScanner(this, tts);
+                fileScanner = new FileScanner(this);
                 progressDialog.dismiss();
-                voiceFileScanner.setFileListener(new VoiceFileScanner.FileSelectedListener() {
+                fileScanner.setDialogDismissListener(new FileScanner.FileDialogDismissedListener() {
+                    @Override
+                    public void dialogDismissed() {
+                        activity.finish();
+                    }
+                });
+                fileScanner.setFileListener(new FileScanner.FileSelectedListener() {
                     @Override
                     public void fileSelected(final File file) {
                         try {

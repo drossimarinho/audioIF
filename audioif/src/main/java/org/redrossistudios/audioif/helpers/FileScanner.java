@@ -3,6 +3,8 @@ package org.redrossistudios.audioif.helpers;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Environment;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -10,9 +12,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
-
-import org.redrossistudios.audioif.controllers.TextModeActivity;
-
 import java.io.File;
 import java.util.ArrayList;
 
@@ -20,12 +19,13 @@ public class FileScanner {
 
 
     public  final String STORY_EXTENSIONS = "(?i).+\\.(z[1-8]|zblorb|zlb)$";
-    private final TextModeActivity activity;
+    private final AppCompatActivity activity;
     public ListView list;
     private Dialog dialog;
     private File currentPath;
     private ArrayList<String> filePathList;
     private File chosenFile;
+    private boolean noFilesFound;
 
     public interface FileSelectedListener {
         void fileSelected(File file);
@@ -48,19 +48,19 @@ public class FileScanner {
     private FileSelectedListener fileListener;
 
 
-    public FileScanner(TextModeActivity activity) {
+    public FileScanner(final AppCompatActivity activity) {
         this.activity = activity;
+        filePathList = scanDir(getChosenFile(Environment.getExternalStorageDirectory().getPath()),new ArrayList<String>());
+        if(filePathList.isEmpty()){
+            noFilesFound = true;
+
+        }
+        else {
         dialog = new Dialog(activity);
         list = new ListView(activity);
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override public void onItemClick(AdapterView<?> parent, View view, int which, long id) {
-                String fileChosen = (String) list.getItemAtPosition(which);
-                for (String filePath : filePathList) {
-                   if(filePath.contains(fileChosen)){
-                       fileChosen = filePath;
-                       break;
-                   }
-                }
+                String fileChosen = filePathList.get(which);
                 chosenFile = getChosenFile(fileChosen);
 
                     if (fileListener != null) {
@@ -79,28 +79,45 @@ public class FileScanner {
         });
         dialog.setContentView(list);
         dialog.getWindow().setLayout(WindowManager.LayoutParams.FILL_PARENT, WindowManager.LayoutParams.FILL_PARENT);
-        filePathList = scanDir(getChosenFile(Environment.getExternalStorageDirectory().getPath()),new ArrayList<String>());
-        ArrayList<String> fileList = new ArrayList<>();
-        String[] filePathParts;
-        String rawFileName;
-        for (String filePath : filePathList) {
-            filePathParts = filePath.split("/");
-            rawFileName = filePathParts[filePathParts.length - 1];
-            fileList.add(rawFileName);
-        }
-        list.setAdapter(new ArrayAdapter(activity,
-                android.R.layout.simple_list_item_1, fileList) {
-            @Override public View getView(int pos, View view, ViewGroup parent) {
-                view = super.getView(pos, view, parent);
-                ((TextView) view).setSingleLine(true);
-                return view;
+
+
+            ArrayList<String> fileList = new ArrayList<>();
+            String[] filePathParts;
+            String rawFileName;
+            for (String filePath : filePathList) {
+                filePathParts = filePath.split("/");
+                rawFileName = filePathParts[filePathParts.length - 1];
+                fileList.add(rawFileName);
             }
-        });
+            list.setAdapter(new ArrayAdapter(activity,
+                    android.R.layout.simple_list_item_1, fileList) {
+                @Override
+                public View getView(int pos, View view, ViewGroup parent) {
+                    view = super.getView(pos, view, parent);
+                    ((TextView) view).setSingleLine(true);
+                    return view;
+                }
+            });
+        }
     }
 
 
     public void showDialog() {
-        dialog.show();
+        if(noFilesFound){
+            AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+            builder.setMessage("No story files found.")
+                    .setCancelable(false)
+                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            activity.finish();
+                        }
+                    });
+            AlertDialog alert = builder.create();
+            alert.show();
+        }
+        else{
+            dialog.show();
+        }
     }
 
     private File getChosenFile(String fileChosen) {
