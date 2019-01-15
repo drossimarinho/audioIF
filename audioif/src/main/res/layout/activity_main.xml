@@ -26,13 +26,16 @@
         android:id="@+id/editText"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="45dp"
         android:ems="10"
         android:hint="next command"
         android:inputType="textPersonName"
         android:visibility="gone"
+        android:background="@drawable/edittext_bg"
+        android:textColor="#000"
         app:layout_constraintBottom_toTopOf="@+id/button"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"/>
+        app:layout_constraintRight_toRightOf="parent" />
 
     <ScrollView
         android:id="@+id/scrollView"

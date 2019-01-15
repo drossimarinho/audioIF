@@ -2,14 +2,17 @@ package org.redrossistudios.audioif.controllers;
 
 import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
+import android.content.Context;
 import android.content.Intent;
 import android.speech.RecognizerIntent;
 import android.speech.tts.TextToSpeech;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -162,12 +165,12 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
                     handleButtonClick();
                 }
             });
-            commandField.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    startVoiceInput();
-                }
-            });
+//            commandField.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View view) {
+//                    startVoiceInput();
+//                }
+//            });
             storyField.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -177,6 +180,14 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
                     else{
                         startVoiceInput();
                     }
+                }
+            });
+            storyField.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+                    commandField.setVisibility(View.VISIBLE);
+                    showKeyboard(activity, commandField);
+                    return true;
                 }
             });
             String initialText = getBufferText(screenModel);
@@ -290,6 +301,7 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
         if(currentText.length() > 1){
             storyField.setText(currentText);
             commandField.setText("");
+            commandField.setVisibility(View.GONE);
             tts.speak(storyField.getText().toString(), TextToSpeech.QUEUE_FLUSH, null);
             startVoiceInput();
         }
@@ -308,5 +320,32 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
             return result.substring(0,result.length()-2).trim();
         }
         return result;
+    }
+    @Override
+    public boolean onKeyUp(int keyCode, KeyEvent event) {
+        switch (keyCode) {
+            case KeyEvent.KEYCODE_ENTER:
+                handleButtonClick();
+                return true;
+            default:
+                return super.onKeyUp(keyCode, event);
+        }
+    }
+
+    private void showKeyboard(Context activityContext, final EditText editText){
+
+        final InputMethodManager imm = (InputMethodManager)
+                activityContext.getSystemService(Context.INPUT_METHOD_SERVICE);
+
+        if (!editText.hasFocus()) {
+            editText.requestFocus();
+        }
+
+        editText.post(new Runnable() {
+            @Override
+            public void run() {
+                imm.showSoftInput(editText, InputMethodManager.SHOW_FORCED);
+            }
+        });
     }
 }
