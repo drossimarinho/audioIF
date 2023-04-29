@@ -11,7 +11,7 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name="org.redrossistudios.audioif.controllers.MenuActivity">
+        <activity android:name="org.redrossistudios.audioif.controllers.MenuActivity" android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
