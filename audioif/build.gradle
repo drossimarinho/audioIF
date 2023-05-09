@@ -5,10 +5,10 @@ android {
     buildToolsVersion "28.0.2"
     defaultConfig {
         applicationId "org.redrossistudios.audioif"
-        minSdkVersion 19
+        minSdkVersion 24
         targetSdkVersion 33
-        versionCode 2
-        versionName "1.1"
+        versionCode 5
+        versionName "1.4"
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
